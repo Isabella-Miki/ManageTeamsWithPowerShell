@@ -34,15 +34,6 @@ function criarEquipe {
         Write-Host "Erro ao criar a equipe"
     }
 }
-
-function listaEquipes {
-    try {
-        Get-team -user $usuarioLogado.account | Select-Object displayName, groupId, description 
-    } catch {
-        Write-Host "Erro ao listar as equipes"
-    }
-}
-
 function adicionarMembroManual {
     $emailMembro = Read-Host "Informe o email do membro: "
     $nomeEquipe = Read-Host "Informe o nome da equipe: "
@@ -59,7 +50,6 @@ function adicionarMembroManual {
 
 $opt = 1
 while ($opt -ge 0) {
-    Clear-Host
     Write-Host "Gerenciando o Microsoft Teams!"
     Write-Host "1 - Listar suas equipes"
     Write-Host "2 - Criar equipe"
@@ -82,8 +72,6 @@ while ($opt -ge 0) {
             Write-Host "Opção inválida, tente novamente!"
         }
     }
-
-    $opt = Read-Host "Digite uma opção..."
 }
 
 
