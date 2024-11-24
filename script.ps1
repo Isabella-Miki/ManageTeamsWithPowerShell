@@ -4,6 +4,15 @@ $WarningPreference = "SilentlyContinue"
 Write-Host "Realize o login para continuar"
 $usuarioLogado = Connect-MicrosoftTeams
 
+function criarEquipe {
+    $nomeEquipe = Read-Host "Digite o nome da equipe: "
+    try {
+        New-Team -DisplayName $nomeEquipe
+        Write-Host "Equipe criada com sucesso"
+    } catch {
+        Write-Host "Erro ao criar a equipe"
+    }
+}
 function adicionarMembrosExcel {
     $excel = ".\equipe.xlsx" #coloque o caminho do excel
     $dados = Import-Excel -Path $excel
@@ -25,15 +34,7 @@ function adicionarMembrosExcel {
     }
 }
 
-function criarEquipe {
-    $nomeEquipe = Read-Host "Digite o nome da equipe: "
-    try {
-        New-Team -DisplayName $nomeEquipe
-        Write-Host "Equipe criada com sucesso"
-    } catch {
-        Write-Host "Erro ao criar a equipe"
-    }
-}
+
 function adicionarMembroManual {
     $emailMembro = Read-Host "Informe o email do membro: "
     $nomeEquipe = Read-Host "Informe o nome da equipe: "
@@ -48,6 +49,19 @@ function adicionarMembroManual {
     }
 }
 
+function removerEquipe {
+    $nomeEquipe = Read-Host "Digite o nome da equipe: "
+    $idEquipe = Get-team -User $usuarioLogado.account -DisplayName $nomeEquipe -ErrorAction SilentlyContinue
+
+    try {
+        Remove-Team -GroupId $idEquipe.groupId
+        Write-Host "Equipe deletada com sucesso"
+    } catch {
+        Write-Host "Erro ao deletar a equipe"
+    } 
+}
+
+
 $opt = 1
 while ($opt -ge 0) {
     Write-Host "Gerenciando o Microsoft Teams!"
@@ -55,7 +69,8 @@ while ($opt -ge 0) {
     Write-Host "2 - Criar equipe"
     Write-Host "3 - Adicionar membros a partir de um arquivo excel"
     Write-Host "4 - Adicionar um membro na equipe"
-    Write-Host "5 - Sair"
+    Write-Host "5 - Excluir uma equipe:"
+    Write-Host "6 - Sair"
     #----------------------------------
     $opt = Read-Host "Digite uma opção: "
 
@@ -64,7 +79,8 @@ while ($opt -ge 0) {
         "2" { criarEquipe }
         "3" { adicionarMembrosExcel }
         "4" { adicionarMembroManual } 
-        "5" { 
+        "5" { removerEquipe}
+        "6" { 
             Write-Host "Adeus!"
             Exit
         }
